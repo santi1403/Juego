@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Master Pro - Inicio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="menu-body">
+    <div class="stars"></div>
+    <div class="container text-center floating">
+        <h1 class="title-main">🍔 BURGER<br><span class="highlight-text">MASTER PRO</span> 👨‍🍳</h1>
+        <p class="subtitle">Gestión de tiempo, combos y máxima presión.</p>
+        
+        <div class="stats-panel">
+            <h3>🏆 Récord Actual: <span id="high-score-display">0</span></h3>
+        </div>
+
+        <div class="instructions">
+            <p>🔥 <b>Reglas:</b></p>
+            <ul>
+                <li>Atiende a los clientes antes de que su barra de paciencia llegue a cero.</li>
+                <li>Si un cliente se va, pierdes una vida (tienes 3).</li>
+                <li>Sírveles rápido para aumentar tu multiplicador de combo.</li>
+            </ul>
+        </div>
+        
+        <a href="game.html" class="btn btn-primary btn-massive pulse">🔥 ¡INICIAR TURNO! 🔥</a>
+    </div>
+
+    <script>
+        // Cargar el puntaje máximo en el menú
+        document.addEventListener('DOMContentLoaded', () => {
+            const highScore = localStorage.getItem('burgerMasterHighScore') || 0;
+            document.getElementById('high-score-display').innerText = highScore;
+        });
+    </script>
+</body>
+</html>

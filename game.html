@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Master Pro - Cocinando</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="game-body">
+    <!-- Contenedor para efectos de partículas -->
+    <div id="particles-container"></div>
+
+    <!-- Pantalla de Game Over (Oculta por defecto) -->
+    <div id="game-over-screen" class="hidden overlay">
+        <div class="modal">
+            <h1>¡TURNO TERMINADO! 💀</h1>
+            <h2>Puntaje Final: <span id="final-score">0</span></h2>
+            <p id="new-record-msg" class="hidden highlight-text">¡NUEVO RÉCORD!</p>
+            <a href="game.html" class="btn btn-primary">🔄 Jugar de nuevo</a>
+            <a href="index.html" class="btn btn-secondary">🏠 Volver al Menú</a>
+        </div>
+    </div>
+
+    <div class="game-layout">
+        <!-- Panel Superior: Estadísticas -->
+        <header class="hud">
+            <div class="hud-item">Nivel: <span id="level-display">1</span></div>
+            <div class="hud-item score-box">Puntos: <span id="score-display">0</span></div>
+            <div class="hud-item combo-box">Combo: x<span id="combo-display">1.0</span></div>
+            <div class="hud-item lives-box">Vidas: <span id="lives-display">❤️❤️❤️</span></div>
+        </header>
+
+        <!-- Zona de Clientes -->
+        <section class="customers-zone" id="customers-zone">
+            <!-- Los clientes se inyectan aquí con JS -->
+        </section>
+
+        <!-- Zona de Cocina -->
+        <section class="kitchen-zone">
+            <div class="prep-station">
+                <h3>Mesa de Preparación</h3>
+                <div id="plate" class="plate"></div>
+                <div class="plate-actions">
+                    <button class="btn btn-danger btn-small" onclick="gameManager.trashPlate()">🗑️ Tirar</button>
+                    <button class="btn btn-success btn-small pulse-fast" onclick="gameManager.servePlate()">🛎️ SERVIR</button>
+                </div>
+            </div>
+
+            <!-- Panel de Ingredientes -->
+            <div class="ingredients-station">
+                <h3>Ingredientes</h3>
+                <div class="ingredients-grid">
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🍞', 'Pan')">🍞<br><span>Pan</span></button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥩', 'Carne')">🥩<br><span>Carne</span></button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🧀', 'Queso')">🧀<br><span>Queso</span></button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥬', 'Lechuga')">🥬<br><span>Lechuga</span></button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🍅', 'Tomate')">🍅<br><span>Tomate</span></button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥓', 'Tocino')">🥓<br><span>Tocino</span></button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🧅', 'Cebolla')">🧅<br><span>Cebolla</span></button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥒', 'Pepinillo')">🥒<br><span>Pepin.</span></button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
