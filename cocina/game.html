@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Master Pro - Cocina de Alto Rendimiento 🍔🔥</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fuente de Google Fonts para estética arcade profesional -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="game-body">
+    <!-- Contenedor avanzado para efectos de partículas y monedas flotantes -->
+    <div id="particles-container"></div>
+    <div id="floating-text-container"></div>
+
+    <!-- Pantalla de Game Over Dinámica (Oculta por defecto) -->
+    <div id="game-over-screen" class="hidden overlay animate-fade">
+        <div class="modal glass-panel">
+            <div class="modal-badge">💀 QUIEBRA TOTAL</div>
+            <h1>¡TURNO TERMINADO!</h1>
+            <p class="modal-subtitle">Los clientes se cansaron de esperar y el restaurante cerró.</p>
+            <div class="score-card-final">
+                <h2>Puntaje Final: <span id="final-score">0</span></h2>
+                <h3 class="orders-summary-text">Pedidos completados con éxito: <span id="final-orders-count">0</span> / 10</h3>
+            </div>
+            <p id="new-record-msg" class="hidden highlight-text pulse-glow">🌟 ¡NUEVO RÉCORD HISTÓRICO ALCANZADO! 🌟</p>
+            <div class="modal-actions">
+                <a href="game.html" class="btn btn-primary btn-glow">🔄 Reintentar Turno</a>
+                <a href="index.html" class="btn btn-secondary">🏠 Volver al Menú Principal</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal del Juego -->
+    <div class="game-layout">
+        
+        <!-- Panel Superior: HUD Estadístico Avanzado -->
+        <header class="hud glass-hud">
+            <div class="hud-item level-badge">
+                <span class="hud-icon">🏆</span> Nivel: <span id="level-display">1</span>
+            </div>
+            <div class="hud-item score-box">
+                <span class="hud-icon">💰</span> Puntos: <span id="score-display">0</span>
+            </div>
+            <div class="hud-item combo-box">
+                <span class="hud-icon">⚡</span> Combo: x<span id="combo-display">1.0</span>
+            </div>
+            <div class="hud-item orders-progress-box">
+                <span class="hud-icon">📦</span> Meta Ruta: <span id="orders-progress-display">0</span>/10
+            </div>
+            <div class="hud-item lives-box">
+                <span class="hud-icon">❤️</span> Vidas: <span id="lives-display">❤️❤️❤️</span>
+            </div>
+        </header>
+
+        <!-- Zona Interactiva de Clientes -->
+        <section class="customers-zone-wrapper">
+            <div class="zone-title">👥 Cola de Clientes en Espera</div>
+            <div class="customers-zone" id="customers-zone">
+                <!-- Los clientes y sus barras de paciencia dinámicas se inyectan aquí con JavaScript -->
+            </div>
+        </section>
+
+        <!-- Zona de Cocina y Ensamblaje -->
+        <section class="kitchen-zone">
+            
+            <!-- Estación de Preparación de Platos -->
+            <div class="prep-station glass-panel">
+                <div class="station-header">
+                    <h3>🍳 Mesa de Ensamblaje Profesional</h3>
+                    <span class="station-tip">Arma el pedido exacto del cliente</span>
+                </div>
+                
+                <div id="plate" class="plate">
+                    <!-- Los ingredientes apilados aparecen aquí -->
+                    <span class="empty-plate-text">Plato vacío listo para cocinar...</span>
+                </div>
+
+                <div class="plate-actions">
+                    <button class="btn btn-danger btn-small" onclick="gameManager.trashPlate()">
+                        🗑️ Botar Plato
+                    </button>
+                    <button class="btn btn-success btn-large pulse-fast" onclick="gameManager.servePlate()">
+                        🛎️ SERVIR PEDIDO
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Expandido de Ingredientes (Hamburguesas, Extras y Bebidas) -->
+            <div class="ingredients-station glass-panel">
+                <h3>🥩 Despensa de Ingredientes y Extras</h3>
+                <div class="ingredients-grid">
+                    <!-- Capas base y carnes -->
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🍞', 'Pan Inferior')">
+                        <span class="ing-icon">🍞</span><span class="ing-name">Pan Base</span>
+                    </button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥩', 'Carne Asada')">
+                        <span class="ing-icon">🥩</span><span class="ing-name">Carne 100g</span>
+                    </button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🧀', 'Queso Cheddar')">
+                        <span class="ing-icon">🧀</span><span class="ing-name">Cheddar</span>
+                    </button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥓', 'Tocino Crujiente')">
+                        <span class="ing-icon">🥓</span><span class="ing-name">Tocino</span>
+                    </button>
+                    
+                    <!-- Vegetales frescos -->
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥬', 'Lechuga Crespa')">
+                        <span class="ing-icon">🥬</span><span class="ing-name">Lechuga</span>
+                    </button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🍅', 'Tomate Rodaja')">
+                        <span class="ing-icon">🍅</span><span class="ing-name">Tomate</span>
+                    </button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🧅', 'Cebolla Morada')">
+                        <span class="ing-icon">🧅</span><span class="ing-name">Cebolla</span>
+                    </button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🥒', 'Pepinillos Agrios')">
+                        <span class="ing-icon">🥒</span><span class="ing-name">Pepinillos</span>
+                    </button>
+
+                    <!-- NUEVOS EXTRAS Y BEBIDAS GOURMET -->
+                    <button class="ing-btn special-ing" onclick="gameManager.addIngredient('🍳', 'Huevo Frito')">
+                        <span class="ing-icon">🍳</span><span class="ing-name">Huevo Frito</span>
+                    </button>
+                    <button class="ing-btn special-ing" onclick="gameManager.addIngredient('🍟', 'Papas Fritas')">
+                        <span class="ing-icon">🍟</span><span class="ing-name">Papas 🍟</span>
+                    </button>
+                    <button class="ing-btn special-ing" onclick="gameManager.addIngredient('🥤', 'Gaseosa Cola')">
+                        <span class="ing-icon">🥤</span><span class="ing-name">Gaseosa 🥤</span>
+                    </button>
+                    <button class="ing-btn" onclick="gameManager.addIngredient('🍞', 'Pan Superior')">
+                        <span class="ing-icon">🍞</span><span class="ing-name">Pan Tapa</span>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Script Principal con la lógica core -->
+    <script src="script.js"></script>
+</body>
+</html>

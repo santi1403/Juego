@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Master Pro - Ultimate Edition 🍔🔥</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fuentes de Google Fonts para estética arcade y moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="menu-body">
+    <!-- Fondo Animado de Estrellas y Partículas Cósmicas -->
+    <div class="stars-container">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+
+    <div class="menu-wrapper">
+        <!-- Insignia Superior -->
+        <div class="game-edition-badge pulse-glow">⚡ V 3.0 ULTIMATE ARCADE EDITION ⚡</div>
+
+        <div class="container text-center floating-container glass-card">
+            <h1 class="title-main">
+                🍔 BURGER<br>
+                <span class="highlight-text neon-glow">MASTER PRO</span> 👨‍🍳
+            </h1>
+            <p class="subtitle">Gestión extrema de cocina, combos dinámicos, entrega en moto y máxima presión.</p>
+            
+            <!-- Panel de Estadísticas y Récords Globales -->
+            <div class="stats-dashboard">
+                <div class="stat-card">
+                    <span class="stat-icon">🏆</span>
+                    <div>
+                        <span class="stat-label">Récord Restaurante</span>
+                        <h3><span id="high-score-display">0</span> pts</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🏍️</span>
+                    <div>
+                        <span class="stat-label">Récord Moto Delivery</span>
+                        <h3><span id="moto-score-display">0</span> pts</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selector de Dificultad del Turno -->
+            <div class="difficulty-selector">
+                <label>⚙️ Selecciona la Dificultad del Turno:</label>
+                <div class="diff-buttons">
+                    <button class="diff-btn active" data-diff="normal" onclick="setDifficulty('normal', this)">Normal</button>
+                    <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard', this)">🔥 Pro Chef</button>
+                    <button class="diff-btn" data-diff="extreme" onclick="setDifficulty('extreme', this)">💀 Extremo</button>
+                </div>
+            </div>
+
+            <!-- Bloque de Reglas e Instrucciones Expandidas -->
+            <div class="instructions-panel">
+                <h4>📜 Manual del Chef y Reglas del Local</h4>
+                <ul class="rules-list">
+                    <li>🍔 <b>Armado Preciso:</b> Construye exactamente la hamburguesa o extra que pide el cliente en el orden correcto.</li>
+                    <li>⏳ <b>Control de Paciencia:</b> Atiende antes de que la barra de humor del cliente llegue a cero o perderás vidas.</li>
+                    <li>⚡ <b>Multiplicador de Combos:</b> Sírveles rápido consecutivamente para multiplicar tus ganancias y puntaje.</li>
+                    <li>📦 <b>Meta de Reparto:</b> ¡Al completar 10 pedidos exitosos, saldrás automáticamente a la carretera en moto a esquivar tráfico hasta los 10,000 puntos!</li>
+                </ul>
+            </div>
+
+            <!-- Panel de Logros Desbloqueados -->
+            <div class="achievements-preview">
+                <h4>🏅 Sala de Logros del Empleado del Mes</h4>
+                <div class="badges-row">
+                    <span id="badge-first" class="achievement-badge locked" title="Completa tu primer pedido">🍳 Novato</span>
+                    <span id="badge-moto" class="achievement-badge locked" title="Llega al minijuego de moto">🏍️ Repartidor</span>
+                    <span id="badge-master" class="achievement-badge locked" title="Supera los 5,000 puntos">👑 Maestro</span>
+                </div>
+            </div>
+            
+            <!-- Botones de Acción Principal -->
+            <div class="menu-actions">
+                <a href="game.html" class="btn btn-primary btn-massive pulse-glow">🔥 ¡INICIAR TURNO DE COCINA! 🔥</a>
+            </div>
+
+            <!-- Créditos Footer -->
+            <footer class="menu-footer">
+                <p>Desarrollado con Tecnologías Web Avanzadas • POO • Node.js • Render Web Service</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Script de Inicialización de Menú, Récords y Logros -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const highScore = localStorage.getItem('burgerMasterHighScore') || 0;
+            const motoScore = localStorage.getItem('motoHighScore') || 0;
+            
+            document.getElementById('high-score-display').innerText = highScore;
+            document.getElementById('moto-score-display').innerText = motoScore;
+
+            // Desbloqueo dinámico de logros visuales según los récords guardados
+            if (highScore > 0) {
+                document.getElementById('badge-first').classList.remove('locked');
+                document.getElementById('badge-first').classList.add('unlocked');
+            }
+            if (highScore >= 1500) {
+                document.getElementById('badge-moto').classList.remove('locked');
+                document.getElementById('badge-moto').classList.add('unlocked');
+            }
+            if (highScore >= 5000) {
+                document.getElementById('badge-master').classList.remove('locked');
+                document.getElementById('badge-master').classList.add('unlocked');
+            }
+        });
+
+        // Función para cambiar dificultad y guardarla en preferencias
+        function setDifficulty(level, btnElement) {
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            localStorage.setItem('burgerDifficulty', level);
+        }
+    </script>
+</body>
+</html>

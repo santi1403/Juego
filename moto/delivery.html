@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Burger Master Pro - Ruta de Reparto 🏍️ Ultimate Edition</title>
+    <link rel="stylesheet" href="delivery.css">
+</head>
+<body class="arcade-body">
+
+    <!-- Pantalla de Pausa -->
+    <div id="pause-screen" class="hidden overlay">
+        <div class="modal animate-pop">
+            <div class="modal-badge">ESTADO: PAUSADO</div>
+            <h1>⏸️ JUEGO PAUSADO ⏸️</h1>
+            <p class="modal-subtitle">Toma un respiro, revisa tus pedidos y vuelve a la pista cuando estés listo.</p>
+            <div class="modal-actions">
+                <button id="resume-btn" class="btn btn-primary btn-massive">▶️ Continuar Ruta</button>
+                <a href="game.html" class="btn btn-secondary">🏠 Volver al Restaurante</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Victoria (10,000 Puntos) -->
+    <div id="victory-screen" class="hidden overlay">
+        <div class="modal animate-pop">
+            <div class="modal-badge">¡RUTERO MASTER SUPREMO!</div>
+            <h1>🏆 ¡MISIÓN CUMPLIDA! 🏆</h1>
+            <p class="modal-subtitle">¡Llegaste a los 10,000 puntos de reparto! El imperio de hamburguesas está a salvo.</p>
+            
+            <div class="score-card-final">
+                <h2>¡Victoria Total!</h2>
+                <div class="score-breakdown">
+                    <span>Puntaje Final: <strong id="victory-score">0</strong></span>
+                    <span>Récord Histórico: <strong id="victory-highscore">0</strong></span>
+                </div>
+                <span class="orders-summary-text">¡Reparto completado con máxima velocidad y cero fallos! 🚀</span>
+            </div>
+
+            <div class="modal-actions">
+                <button onclick="location.reload()" class="btn btn-primary">🔄 Jugar de Nuevo</button>
+                <a href="game.html" class="btn btn-success btn-massive">🏠 Volver al Restaurante</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Game Over -->
+    <div id="game-over-screen" class="hidden overlay">
+        <div class="modal animate-pop">
+            <div class="modal-badge">¡ACCIDENTE EN LA VÍA!</div>
+            <h1>💥 ¡TE ESTRELLASTE! 💥</h1>
+            <p class="modal-subtitle">El tráfico de la ciudad te ganó esta partida. ¡Las hamburguesas salieron volando!</p>
+            
+            <div class="score-card-final">
+                <h2>Puntaje: <span id="final-score">0</span> pts</h2>
+                <div class="score-breakdown">
+                    <span>Mejor Récord: <strong id="final-highscore">0</strong></span>
+                </div>
+                <span class="orders-summary-text">¡Mantén la vista al frente, usa los carriles y esquiva los carros!</span>
+            </div>
+
+            <div class="modal-actions">
+                <button onclick="location.reload()" class="btn btn-primary btn-massive">🔄 Reintentar Ruta</button>
+                <a href="game.html" class="btn btn-secondary">🏠 Volver al Restaurante</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal del Minijuego -->
+    <div class="game-container">
+        <!-- HUD Superior Estilo Glassmorphism Pro -->
+        <header class="hud glass-hud">
+            <div class="hud-item level-box">
+                <span class="hud-icon">📈</span> Nivel <span id="level-display">1</span>
+            </div>
+            <div class="hud-item score-box">
+                <span class="hud-icon">🍔</span> <span id="score-display">0</span> / <span id="target-display">10000</span>
+            </div>
+            <div class="hud-item speed-box">
+                <span class="hud-icon">⚡</span> <span id="speed-display">1.0x</span>
+            </div>
+            <div class="hud-item high-box">
+                <span class="hud-icon">🏆</span> <span id="high-score-hud">0</span>
+            </div>
+        </header>
+
+        <!-- Lienzo de la Carretera con Efecto CRT/Neon -->
+        <div class="canvas-wrapper">
+            <div class="crt-scanline"></div>
+            <canvas id="roadCanvas" width="420" height="600"></canvas>
+            <div class="floating-controls-hint">
+                Presiona <b>ESC</b> para Pausar
+            </div>
+        </div>
+
+        <!-- Botones de Control Táctil para Móviles / Tablets -->
+        <div class="touch-controls">
+            <button id="left-btn" class="touch-btn">⬅️ IZQ</button>
+            <button id="pause-trigger-btn" class="touch-btn touch-btn-pause">⏸️ PAUSA</button>
+            <button id="right-btn" class="touch-btn">DER ➡️</button>
+        </div>
+    </div>
+
+    <script src="delivery.js"></script>
+</body>
+</html>
