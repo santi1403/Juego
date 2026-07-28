@@ -1,6 +1,8 @@
 /**
- * BURGER MASTER PRO - Lógica Core
- * Este código usa Clases (POO) para mantener un control absoluto del juego.
+ * BURGER MASTER PRO - Lógica Core Masiva y Avanzada
+ * Este código usa Clases (POO) para mantener un control absoluto del juego,
+ * gestionando recetas, clientes, temporizadores de paciencia, combos, partículas,
+ * almacenamiento local y la transición al minijuego de reparto.
  */
 
 // --- BASE DE DATOS DE RECETAS ---
@@ -54,11 +56,13 @@ class Customer {
         this.timer = setInterval(() => {
             this.currentPatience -= 1;
             const percentage = (this.currentPatience / this.maxPatience) * 100;
-            fillBar.style.width = `${percentage}%`;
+            if (fillBar) {
+                fillBar.style.width = `${percentage}%`;
 
-            // Cambiar color de la barra según la paciencia
-            if (percentage < 30) fillBar.style.backgroundColor = 'var(--danger)';
-            else if (percentage < 60) fillBar.style.backgroundColor = 'var(--warning)';
+                // Cambiar color de la barra según la paciencia
+                if (percentage < 30) fillBar.style.backgroundColor = 'var(--danger)';
+                else if (percentage < 60) fillBar.style.backgroundColor = 'var(--warning)';
+            }
 
             if (this.currentPatience <= 0) {
                 clearInterval(this.timer);
@@ -69,7 +73,9 @@ class Customer {
 
     destroy() {
         clearInterval(this.timer);
-        this.element.remove();
+        if (this.element) {
+            this.element.remove();
+        }
     }
 }
 
@@ -80,6 +86,7 @@ class GameManager {
         this.lives = 3;
         this.combo = 1.0;
         this.level = 1;
+        this.ordersCompleted = 0; // CONTADOR CLAVE: Lleva la cuenta de los pedidos exitosos para el salto de página
         this.plate = [];
         this.customers = [];
         this.customerCount = 0;
@@ -116,7 +123,9 @@ class GameManager {
         this.customerCount++;
         const customer = new Customer(this.customerCount, this.level);
         this.customers.push(customer);
-        this.DOM.zone.appendChild(customer.element);
+        if (this.DOM.zone) {
+            this.DOM.zone.appendChild(customer.element);
+        }
         
         // Iniciar el temporizador del cliente. Si se acaba, perdemos vida.
         customer.startWaiting((c) => this.customerLeft(c));
@@ -143,6 +152,7 @@ class GameManager {
     }
 
     renderPlate() {
+        if (!this.DOM.plate) return;
         this.DOM.plate.innerHTML = '';
         this.plate.forEach(ing => {
             const div = document.createElement('div');
@@ -176,6 +186,7 @@ class GameManager {
             // Calcular puntos base + multiplicador de combo
             const pointsEarned = Math.floor(customer.recipe.points * this.combo);
             this.score += pointsEarned;
+            this.ordersCompleted++; // Incrementa el contador de pedidos
             
             // Subir combo
             this.combo = Math.min(4.0, this.combo + 0.2); 
@@ -188,13 +199,22 @@ class GameManager {
                 this.createParticles(window.innerWidth/2, window.innerHeight/2, '⭐', 30);
             }
 
-            // Efectos visuales
+            // Efectos visuales de dinero
             const rect = customer.element.getBoundingClientRect();
             this.createParticles(rect.left + rect.width/2, rect.top + rect.height/2, '💸');
 
             this.removeCustomer(customer);
             this.plate = [];
             this.renderPlate();
+
+            console.log(`Pedidos completados en restaurante: ${this.ordersCompleted} / 10`);
+
+            // --- SALTO DE PÁGINA AUTOMÁTICO AL MINIJUEGO DE LA MOTO AL LLEGAR A 10 PEDIDOS ---
+            if (this.ordersCompleted >= 10) {
+                alert("¡Excelente trabajo culinario! Has completado los 10 pedidos. ¡Es hora de entregar los domicilios en moto! 🏍️💨");
+                window.location.href = 'delivery.html';
+                return;
+            }
             
         } else {
             // ERROR - Pedido equivocado
@@ -216,15 +236,21 @@ class GameManager {
     }
 
     updateHUD() {
-        this.DOM.score.innerText = this.score;
-        this.DOM.level.innerText = this.level;
-        this.DOM.combo.innerText = this.combo.toFixed(1);
-        this.DOM.lives.innerText = '❤️'.repeat(this.lives) + '🖤'.repeat(3 - this.lives);
+        if (this.DOM.score) this.DOM.score.innerText = this.score;
+        if (this.DOM.level) this.DOM.level.innerText = this.level;
+        if (this.DOM.combo) this.DOM.combo.innerText = this.combo.toFixed(1);
+        if (this.DOM.lives) this.DOM.lives.innerText = '❤️'.repeat(this.lives) + '🖤'.repeat(3 - this.lives);
     }
 
     // Sistema avanzado de partículas visuales
     createParticles(x, y, emoji, count = 10) {
-        const container = document.getElementById('particles-container');
+        let container = document.getElementById('particles-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'particles-container';
+            document.body.appendChild(container);
+        }
+
         for (let i = 0; i < count; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
@@ -253,19 +279,19 @@ class GameManager {
         const finalScoreDisplay = document.getElementById('final-score');
         const newRecordMsg = document.getElementById('new-record-msg');
         
-        screen.classList.remove('hidden');
-        finalScoreDisplay.innerText = this.score;
+        if (screen) screen.classList.remove('hidden');
+        if (finalScoreDisplay) finalScoreDisplay.innerText = this.score;
 
         // Lógica de LocalStorage para guardar el récord
         const currentHigh = localStorage.getItem('burgerMasterHighScore') || 0;
         if (this.score > currentHigh) {
             localStorage.setItem('burgerMasterHighScore', this.score);
-            newRecordMsg.classList.remove('hidden');
+            if (newRecordMsg) newRecordMsg.classList.remove('hidden');
         }
     }
 }
 
-// Instanciar e iniciar el juego solo si estamos en game.html
+// Instanciar e iniciar el juego automáticamente al cargar la página
 let gameManager;
 window.onload = () => {
     if (document.getElementById('customers-zone')) {
