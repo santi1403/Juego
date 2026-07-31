@@ -19,8 +19,9 @@ app.use((req, res, next) => {
 });
 
 // Configurar cabeceras de seguridad básicas y rendimiento para archivos estáticos
+// maxAge: 0 → sin caché agresiva, así todos ven siempre la última versión del juego
 app.use(express.static(__dirname, {
-    maxAge: '1d', // Cache para optimizar la carga de assets gráficos en el navegador
+    maxAge: 0,
     etag: true
 }));
 
