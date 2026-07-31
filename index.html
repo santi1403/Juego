@@ -99,6 +99,13 @@
             document.getElementById('high-score-display').innerText = highScore;
             document.getElementById('moto-score-display').innerText = motoScore;
 
+            // Resaltar el botón del modo de dificultad guardado
+            const savedDiff = localStorage.getItem('burgerDifficulty') || 'normal';
+            document.querySelectorAll('.diff-btn').forEach(b => {
+                if (b.dataset.diff === savedDiff) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+
             // Desbloqueo dinámico de logros visuales según los récords guardados
             if (highScore > 0) {
                 document.getElementById('badge-first').classList.remove('locked');

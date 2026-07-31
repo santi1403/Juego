@@ -9,11 +9,14 @@ const ctx = canvas.getContext('2d');
 // --- VARIABLES DEL JUEGO Y ESTADO ---
 let score = 0;
 let level = 1;
-let gameSpeed = 4.5;
 let isGameOver = false;
 let isVictory = false;
 let isPaused = false;
-let highScore = localStorage.getItem('burgerDeliveryHighScore') || 0;
+let highScore = localStorage.getItem('motoHighScore') || 0;
+
+// Ajuste de dificultad según el modo elegido en el menú principal
+const savedDifficulty = localStorage.getItem('burgerDifficulty') || 'normal';
+let gameSpeed = savedDifficulty === 'extreme' ? 6.5 : (savedDifficulty === 'hard' ? 5.5 : 4.5);
 
 // Actualizar HUD de Récord Inicial
 document.getElementById('high-score-hud').innerText = highScore;
@@ -173,7 +176,7 @@ function spawnEntity() {
 }
 
 let spawnTimer = 0;
-let spawnInterval = 75;
+let spawnInterval = savedDifficulty === 'extreme' ? 52 : (savedDifficulty === 'hard' ? 62 : 75);
 
 // --- SISTEMA DE PARTÍCULAS VISUALES ---
 function createExplosion(x, y, count = 12) {
@@ -402,7 +405,7 @@ function triggerGameOver() {
     isGameOver = true;
     if (score > highScore) {
         highScore = score;
-        localStorage.setItem('burgerDeliveryHighScore', highScore);
+        localStorage.setItem('motoHighScore', highScore);
     }
     document.getElementById('final-score').innerText = score;
     document.getElementById('final-highscore').innerText = highScore;
@@ -414,7 +417,7 @@ function triggerVictory() {
     playSound('victory');
     if (score > highScore) {
         highScore = score;
-        localStorage.setItem('burgerDeliveryHighScore', highScore);
+        localStorage.setItem('motoHighScore', highScore);
     }
     document.getElementById('victory-score').innerText = score;
     document.getElementById('victory-highscore').innerText = highScore;

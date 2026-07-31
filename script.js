@@ -107,7 +107,10 @@ class GameManager {
         
         // Cargar dificultad guardada en el menú
         const savedDiff = localStorage.getItem('burgerDifficulty') || 'normal';
+        this.difficulty = savedDiff;
         this.difficultyMultiplier = savedDiff === 'extreme' ? 1.6 : (savedDiff === 'hard' ? 1.3 : 1.0);
+        // La velocidad de aparición de clientes también sube con la dificultad
+        this.spawnSpeedFactor = savedDiff === 'extreme' ? 0.7 : (savedDiff === 'hard' ? 0.85 : 1.0);
 
         this.DOM = {
             score: document.getElementById('score-display'),
@@ -129,7 +132,7 @@ class GameManager {
     }
 
     startSpawning() {
-        const spawnRate = Math.max(2500, 7500 - (this.level * 450));
+        const spawnRate = Math.max(2500, (7500 - (this.level * 450)) * this.spawnSpeedFactor);
         this.spawnInterval = setInterval(() => {
             if (this.customers.length < 5) { // Máximo 5 clientes simultáneos
                 this.spawnCustomer();
