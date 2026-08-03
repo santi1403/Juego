@@ -22,11 +22,30 @@
             <div class="score-card-final">
                 <h2>Puntaje Final: <span id="final-score">0</span></h2>
                 <h3 class="orders-summary-text">Pedidos completados con éxito: <span id="final-orders-count">0</span> / 10</h3>
+                <h3 class="orders-summary-text coins-summary">🪙 Monedas ganadas: <span id="final-coins">0</span></h3>
             </div>
             <p id="new-record-msg" class="hidden highlight-text pulse-glow">🌟 ¡NUEVO RÉCORD HISTÓRICO ALCANZADO! 🌟</p>
             <div class="modal-actions">
                 <a href="game.html" class="btn btn-primary btn-glow">🔄 Reintentar Turno</a>
                 <a href="index.html" class="btn btn-secondary">🏠 Volver al Menú Principal</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Interactivo (Primera Vez) -->
+    <div id="tutorial-screen" class="hidden overlay animate-fade">
+        <div class="modal glass-panel">
+            <div class="modal-badge">🍳 BIENVENIDO CHEF</div>
+            <h1>📖 TUTORIAL RÁPIDO</h1>
+            <ul class="tutorial-list">
+                <li>1️⃣ Los clientes piden recetas. Fíjate bien en los ingredientes y el orden.</li>
+                <li>2️⃣ Toca los ingredientes para armar el pedido en el plato.</li>
+                <li>3️⃣ Sirve antes de que la barra de paciencia llegue a cero.</li>
+                <li>4️⃣ Sirve rápido para ganar combos, propinas y monedas 🪙.</li>
+                <li>5️⃣ Completa 10 pedidos para salir a repartir en moto 🏍️.</li>
+            </ul>
+            <div class="modal-actions">
+                <button id="tutorial-start-btn" class="btn btn-primary btn-massive pulse-glow">🔥 ¡A COCINAR! 🔥</button>
             </div>
         </div>
     </div>
@@ -48,8 +67,17 @@
             <div class="hud-item orders-progress-box">
                 <span class="hud-icon">📦</span> Meta Ruta: <span id="orders-progress-display">0</span>/10
             </div>
+            <div class="hud-item timer-box">
+                <span class="hud-icon">⏰</span> Tiempo: <span id="timer-display">180</span>
+            </div>
+            <div class="hud-item coins-box">
+                <span class="hud-icon">🪙</span> <span id="coins-display">0</span>
+            </div>
             <div class="hud-item lives-box">
                 <span class="hud-icon">❤️</span> Vidas: <span id="lives-display">❤️❤️❤️</span>
+            </div>
+            <div class="hud-item chef-box">
+                <span id="chef-display">👨‍🍳</span>
             </div>
         </header>
 
@@ -130,6 +158,17 @@
                     </button>
                     <button class="ing-btn" onclick="gameManager.addIngredient('🍞', 'Pan Superior')">
                         <span class="ing-icon">🍞</span><span class="ing-name">Pan Tapa</span>
+                    </button>
+
+                    <!-- NUEVOS INGREDIENTES: HOT DOGS, MALTeadas Y FRESAS -->
+                    <button class="ing-btn special-ing" onclick="gameManager.addIngredient('🌭', 'Perro Caliente')">
+                        <span class="ing-icon">🌭</span><span class="ing-name">Perro 🌭</span>
+                    </button>
+                    <button class="ing-btn special-ing" onclick="gameManager.addIngredient('🍦', 'Malteada')">
+                        <span class="ing-icon">🍦</span><span class="ing-name">Malteada 🍦</span>
+                    </button>
+                    <button class="ing-btn special-ing" onclick="gameManager.addIngredient('🍓', 'Fresa')">
+                        <span class="ing-icon">🍓</span><span class="ing-name">Fresa 🍓</span>
                     </button>
                 </div>
             </div>

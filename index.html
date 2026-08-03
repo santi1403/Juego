@@ -45,6 +45,20 @@
                         <h3><span id="moto-score-display">0</span> pts</h3>
                     </div>
                 </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🪙</span>
+                    <div>
+                        <span class="stat-label">Mis Monedas</span>
+                        <h3 id="coins-display-menu">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🎮</span>
+                    <div>
+                        <span class="stat-label">Nivel Máximo</span>
+                        <h3 id="level-display-menu">1</h3>
+                    </div>
+                </div>
             </div>
 
             <!-- Selector de Dificultad del Turno -->
@@ -54,6 +68,41 @@
                     <button class="diff-btn active" data-diff="normal" onclick="setDifficulty('normal', this)">Normal</button>
                     <button class="diff-btn" data-diff="hard" onclick="setDifficulty('hard', this)">🔥 Pro Chef</button>
                     <button class="diff-btn" data-diff="extreme" onclick="setDifficulty('extreme', this)">💀 Extremo</button>
+                    <button class="diff-btn" data-diff="nightmare" onclick="setDifficulty('nightmare', this)">👹 Pesadilla</button>
+                </div>
+            </div>
+
+            <!-- Selector de Modo de Juego -->
+            <div class="mode-selector">
+                <label>🎮 Modo de Juego:</label>
+                <div class="mode-buttons">
+                    <button class="mode-btn active" data-mode="classic" onclick="setMode('classic', this)">🎮 Clásico</button>
+                    <button class="mode-btn" data-mode="time" onclick="setMode('time', this)">⏱️ Contra Reloj</button>
+                </div>
+                <p class="mode-hint">Contra Reloj: solo 60 segundos para sumar el máximo de puntos.</p>
+            </div>
+
+            <!-- Tienda del Chef (Personaje + Moto) -->
+            <div class="shop-panel">
+                <h4>🛒 TIENDA DEL CHEF</h4>
+                <p class="shop-coins">🪙 Tus monedas: <span id="shop-coins-display">0</span> <span class="shop-tip">(gana monedas sirviendo rápido y recogiendo items en la moto)</span></p>
+                <div class="shop-tabs">
+                    <button class="shop-tab active" id="tab-chefs" onclick="showShopTab('chefs', this)">👨‍🍳 Chefs</button>
+                    <button class="shop-tab" id="tab-motos" onclick="showShopTab('motos', this)">🏍️ Motos</button>
+                </div>
+                <div id="shop-chefs" class="shop-grid"></div>
+                <div id="shop-motos" class="shop-grid hidden"></div>
+            </div>
+
+            <!-- Ranking en Línea (Leaderboard) -->
+            <div class="leaderboard-panel">
+                <h4>🏆 RANKING EN LÍNEA</h4>
+                <div class="lb-form">
+                    <input id="lb-name" type="text" maxlength="20" placeholder="Tu nombre">
+                    <button class="btn btn-small btn-success" onclick="saveMyScore()">💾 Guardar mi récord</button>
+                </div>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <p class="lb-loading">Cargando ranking...</p>
                 </div>
             </div>
 
@@ -64,6 +113,7 @@
                     <li>🍔 <b>Armado Preciso:</b> Construye exactamente la hamburguesa o extra que pide el cliente en el orden correcto.</li>
                     <li>⏳ <b>Control de Paciencia:</b> Atiende antes de que la barra de humor del cliente llegue a cero o perderás vidas.</li>
                     <li>⚡ <b>Multiplicador de Combos:</b> Sírveles rápido consecutivamente para multiplicar tus ganancias y puntaje.</li>
+                    <li>🪙 <b>Propinas y Monedas:</b> Sirve rápido para ganar propinas y monedas, canjéalas en la tienda.</li>
                     <li>📦 <b>Meta de Reparto:</b> ¡Al completar 10 pedidos exitosos, saldrás automáticamente a la carretera en moto a esquivar tráfico hasta los 10,000 puntos!</li>
                 </ul>
             </div>
@@ -75,12 +125,14 @@
                     <span id="badge-first" class="achievement-badge locked" title="Completa tu primer pedido">🍳 Novato</span>
                     <span id="badge-moto" class="achievement-badge locked" title="Llega al minijuego de moto">🏍️ Repartidor</span>
                     <span id="badge-master" class="achievement-badge locked" title="Supera los 5,000 puntos">👑 Maestro</span>
+                    <span id="badge-legend" class="achievement-badge locked" title="Gana 1000 monedas">👑 Leyenda</span>
                 </div>
             </div>
             
             <!-- Botones de Acción Principal -->
             <div class="menu-actions">
                 <a href="game.html" class="btn btn-primary btn-massive pulse-glow">🔥 ¡INICIAR TURNO DE COCINA! 🔥</a>
+                <button id="music-btn" class="btn btn-secondary btn-small" onclick="toggleMusic(this)">🔊 Música: ON</button>
             </div>
 
             <!-- Créditos Footer -->
@@ -90,12 +142,240 @@
         </div>
     </div>
 
-    <!-- Script de Inicialización de Menú, Récords y Logros -->
+    <!-- Script de Inicialización de Menú, Récords, Tienda y Logros -->
     <script>
+        // --- DATOS DE LA TIENDA ---
+        const CHEFS = [
+            { emoji: '👨‍🍳', name: 'Cocinerito', price: 0, desc: 'El clásico' },
+            { emoji: '🧑‍🍳', name: 'Chef Moderno', price: 300, desc: 'Estilo urbano' },
+            { emoji: '👩‍🍳', name: 'Chef Ejecutiva', price: 400, desc: 'Mando en la cocina' },
+            { emoji: '🧑‍🎤', name: 'Chef Rockero', price: 600, desc: 'Con actitud' },
+            { emoji: '🦸', name: 'Chef Héroe', price: 900, desc: 'Salva pedidos' },
+            { emoji: '🤖', name: 'Chef Robot', price: 1200, desc: 'Precisión total' }
+        ];
+        const SHOP_MOTOS = [
+            { emoji: '🏍️', name: 'Moto Clásica', price: 0, color: '#38bdf8', speed: '+0 vel', desc: 'La fiel' },
+            { emoji: '🛵', name: 'Scooter Turbo', price: 600, color: '#4ade80', speed: '+0.7 vel', desc: 'Ágil y rápida' },
+            { emoji: '🏍️', name: 'Moto Deportiva', price: 1200, color: '#f43f5e', speed: '+1.2 vel', desc: 'Pura potencia' }
+        ];
+
+        function getCoins() { return parseInt(localStorage.getItem('burgerCoins')) || 0; }
+        function getOwned() { try { return JSON.parse(localStorage.getItem('burgerOwned')) || []; } catch (e) { return []; } }
+        function isOwned(key) { return getOwned().includes(key); }
+        function setOwned(key) { const o = getOwned(); if (!o.includes(key)) { o.push(key); localStorage.setItem('burgerOwned', JSON.stringify(o)); } }
+
+        function updateCoinsUI() {
+            const coins = getCoins();
+            const c1 = document.getElementById('coins-display-menu');
+            const c2 = document.getElementById('shop-coins-display');
+            if (c1) c1.innerText = coins;
+            if (c2) c2.innerText = coins;
+        }
+
+        function renderShop() {
+            const chefsEl = document.getElementById('shop-chefs');
+            const motosEl = document.getElementById('shop-motos');
+            const selectedChef = localStorage.getItem('burgerChef') || '👨‍🍳';
+            const selectedMoto = parseInt(localStorage.getItem('burgerMoto')) || 0;
+            const coins = getCoins();
+
+            chefsEl.innerHTML = CHEFS.map((c, i) => {
+                const owned = isOwned('chef:' + i);
+                const selected = selectedChef === c.emoji;
+                const canBuy = coins >= c.price;
+                let btnHtml;
+                if (owned) {
+                    btnHtml = selected
+                        ? '<span class="shop-owned shop-selected">✔ En uso</span>'
+                        : `<button class="btn btn-small btn-success" onclick="selectChef(${i})">Usar</button>`;
+                } else {
+                    btnHtml = c.price === 0
+                        ? `<button class="btn btn-small btn-success" onclick="buyChef(${i})">Usar</button>`
+                        : (canBuy
+                            ? `<button class="btn btn-small btn-primary" onclick="buyChef(${i})">Comprar ${c.price}🪙</button>`
+                            : `<button class="btn btn-small btn-secondary" disabled>${c.price}🪙</button>`);
+                }
+                return `<div class="shop-item ${selected ? 'shop-selected' : ''}">
+                    <span class="shop-emoji" style="font-size:2rem">${c.emoji}</span>
+                    <span class="shop-name">${c.name}</span>
+                    <span class="shop-desc">${c.desc}</span>
+                    ${btnHtml}
+                </div>`;
+            }).join('');
+
+            motosEl.innerHTML = SHOP_MOTOS.map((m, i) => {
+                const owned = isOwned('moto:' + i);
+                const selected = selectedMoto === i;
+                const canBuy = coins >= m.price;
+                let btnHtml;
+                if (owned) {
+                    btnHtml = selected
+                        ? '<span class="shop-owned shop-selected">✔ En uso</span>'
+                        : `<button class="btn btn-small btn-success" onclick="selectMoto(${i})">Usar</button>`;
+                } else {
+                    btnHtml = m.price === 0
+                        ? `<button class="btn btn-small btn-success" onclick="buyMoto(${i})">Usar</button>`
+                        : (canBuy
+                            ? `<button class="btn btn-small btn-primary" onclick="buyMoto(${i})">Comprar ${m.price}🪙</button>`
+                            : `<button class="btn btn-small btn-secondary" disabled>${m.price}🪙</button>`);
+                }
+                return `<div class="shop-item ${selected ? 'shop-selected' : ''}" style="--moto-color:${m.color}">
+                    <span class="shop-emoji" style="font-size:2rem">${m.emoji}</span>
+                    <span class="shop-name">${m.name}</span>
+                    <span class="shop-desc">${m.desc} • ${m.speed}</span>
+                    ${btnHtml}
+                </div>`;
+            }).join('');
+        }
+
+        function showShopTab(tab, btn) {
+            document.querySelectorAll('.shop-tab').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            document.getElementById('shop-chefs').classList.toggle('hidden', tab !== 'chefs');
+            document.getElementById('shop-motos').classList.toggle('hidden', tab !== 'motos');
+        }
+
+        function buyChef(i) {
+            const price = CHEFS[i].price;
+            if (isOwned('chef:' + i) || getCoins() < price) return;
+            localStorage.setItem('burgerCoins', getCoins() - price);
+            setOwned('chef:' + i);
+            localStorage.setItem('burgerChef', CHEFS[i].emoji);
+            updateCoinsUI();
+            renderShop();
+        }
+
+        function selectChef(i) {
+            localStorage.setItem('burgerChef', CHEFS[i].emoji);
+            renderShop();
+        }
+
+        function buyMoto(i) {
+            const price = SHOP_MOTOS[i].price;
+            if (isOwned('moto:' + i) || getCoins() < price) return;
+            localStorage.setItem('burgerCoins', getCoins() - price);
+            setOwned('moto:' + i);
+            localStorage.setItem('burgerMoto', i);
+            updateCoinsUI();
+            renderShop();
+        }
+
+        function selectMoto(i) {
+            localStorage.setItem('burgerMoto', i);
+            renderShop();
+        }
+
+        // --- RANKING EN LÍNEA ---
+        async function loadLeaderboard() {
+            const el = document.getElementById('leaderboard-list');
+            try {
+                const res = await fetch('/api/scores');
+                const list = await res.json();
+                if (!list.length) { el.innerHTML = '<p class="lb-empty">Aún no hay puntuaciones. ¡Sé el primero!</p>'; return; }
+                el.innerHTML = list.map((s, i) =>
+                    `<div class="lb-row"><span class="lb-pos">#${i + 1}</span><span class="lb-name">${escapeHtml(s.name)}</span><span class="lb-mode">${s.mode === 'moto' ? '🏍️' : '🍔'}</span><span class="lb-score">${s.score} pts</span></div>`
+                ).join('');
+            } catch (e) {
+                el.innerHTML = '<p class="lb-empty">Ranking no disponible (requiere servidor).</p>';
+            }
+        }
+
+        async function saveMyScore() {
+            const name = document.getElementById('lb-name').value || 'Anónimo';
+            const burger = parseInt(localStorage.getItem('burgerMasterHighScore')) || 0;
+            const moto = parseInt(localStorage.getItem('motoHighScore')) || 0;
+            if (!burger && !moto) { alert('Aún no tienes récords que guardar. ¡Juega primero!'); return; }
+            if (burger > 0) {
+                await fetch('/api/score', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, score: burger, mode: 'restaurante' })
+                });
+            }
+            if (moto > 0) {
+                await fetch('/api/score', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, score: moto, mode: 'moto' })
+                });
+            }
+            loadLeaderboard();
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        // --- MÚSICA DE MENÚ (Web Audio API sintetizada) ---
+        let menuMusic = null;
+        let musicTimer = null;
+        let musicStep = 0;
+        const NOTE_PATTERN = [261.63, 329.63, 392.0, 523.25, 392.0, 329.63, 440.0, 349.23];
+        let musicOn = localStorage.getItem('burgerMusic') !== 'off';
+
+        function playMenuNote() {
+            if (!menuMusic || !musicOn) return;
+            try {
+                const f = NOTE_PATTERN[musicStep % NOTE_PATTERN.length];
+                musicStep++;
+                const osc = menuMusic.createOscillator();
+                const g = menuMusic.createGain();
+                osc.type = 'triangle';
+                osc.frequency.value = f;
+                const t = menuMusic.currentTime;
+                g.gain.setValueAtTime(0.05, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+                osc.connect(g);
+                g.connect(menuMusic.destination);
+                osc.start(t);
+                osc.stop(t + 0.4);
+            } catch (e) { /* silencio */ }
+        }
+
+        function startMusic() {
+            if (!musicOn) return;
+            if (!menuMusic) {
+                try { menuMusic = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+            }
+            if (menuMusic.state === 'suspended') menuMusic.resume();
+            if (musicTimer) return;
+            playMenuNote();
+            musicTimer = setInterval(playMenuNote, 420);
+        }
+
+        function stopMusic() {
+            if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+        }
+
+        function toggleMusic(btn) {
+            musicOn = !musicOn;
+            localStorage.setItem('burgerMusic', musicOn ? 'on' : 'off');
+            if (musicOn) { startMusic(); } else { stopMusic(); }
+            updateMusicBtn(btn);
+        }
+
+        function updateMusicBtn(btn) {
+            if (btn) btn.innerText = musicOn ? '🔊 Música: ON' : '🔇 Música: OFF';
+        }
+
+        // --- DIFICULTAD Y MODO ---
+        function setDifficulty(level, btnElement) {
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            localStorage.setItem('burgerDifficulty', level);
+        }
+
+        function setMode(mode, btnElement) {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+            localStorage.setItem('burgerMode', mode);
+        }
+
+        // --- INICIALIZACIÓN ---
         document.addEventListener('DOMContentLoaded', () => {
             const highScore = localStorage.getItem('burgerMasterHighScore') || 0;
             const motoScore = localStorage.getItem('motoHighScore') || 0;
-            
+
             document.getElementById('high-score-display').innerText = highScore;
             document.getElementById('moto-score-display').innerText = motoScore;
 
@@ -105,6 +385,19 @@
                 if (b.dataset.diff === savedDiff) b.classList.add('active');
                 else b.classList.remove('active');
             });
+
+            // Resaltar el modo de juego guardado
+            const savedMode = localStorage.getItem('burgerMode') || 'classic';
+            document.querySelectorAll('.mode-btn').forEach(b => {
+                if (b.dataset.mode === savedMode) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+
+            // Monedas y nivel máximo
+            updateCoinsUI();
+            const maxLevel = parseInt(localStorage.getItem('burgerMaxLevel')) || 1;
+            const lvlEl = document.getElementById('level-display-menu');
+            if (lvlEl) lvlEl.innerText = maxLevel;
 
             // Desbloqueo dinámico de logros visuales según los récords guardados
             if (highScore > 0) {
@@ -119,14 +412,28 @@
                 document.getElementById('badge-master').classList.remove('locked');
                 document.getElementById('badge-master').classList.add('unlocked');
             }
-        });
+            if (getCoins() >= 1000) {
+                const legendBadge = document.getElementById('badge-legend');
+                if (legendBadge) {
+                    legendBadge.classList.remove('locked');
+                    legendBadge.classList.add('unlocked');
+                }
+            }
 
-        // Función para cambiar dificultad y guardarla en preferencias
-        function setDifficulty(level, btnElement) {
-            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-            localStorage.setItem('burgerDifficulty', level);
-        }
+            // Tienda y ranking
+            renderShop();
+            updateMusicBtn(document.getElementById('music-btn'));
+            loadLeaderboard();
+
+            // Iniciar música con la primera interacción (requisito de los navegadores)
+            const firstInteraction = () => {
+                startMusic();
+                document.removeEventListener('click', firstInteraction);
+                document.removeEventListener('keydown', firstInteraction);
+            };
+            document.addEventListener('click', firstInteraction);
+            document.addEventListener('keydown', firstInteraction);
+        });
     </script>
 </body>
 </html>

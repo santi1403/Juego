@@ -290,3 +290,89 @@ canvas {
     color: white; 
     border: 1px solid rgba(255,255,255,0.2);
 }
+
+/* --- HUD AMPLIADO DE LA MOTO --- */
+.hud {
+    flex-wrap: wrap;
+    gap: 6px;
+    row-gap: 6px;
+}
+
+.lives-box { color: #f43f5e; text-shadow: 0 0 8px rgba(244, 63, 94, 0.5); }
+.moto-box { color: #c084fc; text-shadow: 0 0 8px rgba(192, 132, 252, 0.5); font-size: 0.75rem; }
+.coins-box { color: #facc15; text-shadow: 0 0 8px rgba(250, 204, 21, 0.5); }
+
+/* --- BARRA DE NITRO --- */
+.nitro-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.9);
+    border: 2px solid rgba(250, 204, 21, 0.5);
+    border-radius: 12px;
+    padding: 6px 12px;
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.2);
+}
+
+.nitro-label {
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: #facc15;
+    text-shadow: 0 0 8px rgba(250, 204, 21, 0.6);
+    white-space: nowrap;
+}
+
+.nitro-track {
+    flex: 1;
+    height: 10px;
+    background: rgba(51, 65, 85, 0.8);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.nitro-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #facc15, #f43f5e);
+    border-radius: 6px;
+    transition: width 0.1s linear;
+}
+
+.power-status {
+    font-size: 0.7rem;
+    font-weight: 900;
+    color: #38bdf8;
+    text-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+    white-space: nowrap;
+    min-width: 90px;
+    text-align: right;
+}
+
+/* --- BANNER DE BONIFICACIÓN POR LA COCINA --- */
+.bonus-banner {
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.25), rgba(56, 189, 248, 0.25));
+    border: 2px solid #4ade80;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 900;
+    padding: 8px 12px;
+    border-radius: 12px;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+/* --- BOTÓN DE NITRO TÁCTIL --- */
+.touch-btn-nitro {
+    border-color: #f43f5e;
+    color: #f43f5e;
+    flex: 1.2;
+}
+
+.touch-btn-nitro:active {
+    background: #f43f5e;
+    color: #0f172a;
+    box-shadow: 0 0 20px #f43f5e;
+}

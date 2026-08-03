@@ -82,14 +82,35 @@
             <div class="hud-item high-box">
                 <span class="hud-icon">🏆</span> <span id="high-score-hud">0</span>
             </div>
+            <div class="hud-item lives-box">
+                <span class="hud-icon">❤️</span> <span id="lives-display">❤️❤️❤️</span>
+            </div>
+            <div class="hud-item moto-box">
+                <span id="moto-display">🏍️ Moto Clásica</span>
+            </div>
+            <div class="hud-item coins-box">
+                <span class="hud-icon">🪙</span> <span id="coins-display">0</span>
+            </div>
         </header>
+
+        <!-- Barra de NITRO -->
+        <div class="nitro-bar">
+            <span class="nitro-label">🚀 NITRO</span>
+            <div class="nitro-track">
+                <div id="nitro-fill" class="nitro-fill"></div>
+            </div>
+            <span id="power-status" class="power-status"></span>
+        </div>
+
+        <!-- Banner de bonificación por puntaje de cocina -->
+        <div id="bonus-banner" class="bonus-banner hidden"></div>
 
         <!-- Lienzo de la Carretera con Efecto CRT/Neon -->
         <div class="canvas-wrapper">
             <div class="crt-scanline"></div>
             <canvas id="roadCanvas" width="420" height="600"></canvas>
             <div class="floating-controls-hint">
-                Presiona <b>ESC</b> para Pausar
+                Presiona <b>ESC</b> para Pausar • <b>ESPACIO</b> para NITRO
             </div>
         </div>
 
@@ -98,6 +119,7 @@
             <button id="left-btn" class="touch-btn">⬅️ IZQ</button>
             <button id="pause-trigger-btn" class="touch-btn touch-btn-pause">⏸️ PAUSA</button>
             <button id="right-btn" class="touch-btn">DER ➡️</button>
+            <button id="nitro-btn" class="touch-btn touch-btn-nitro">🚀 NITRO</button>
         </div>
     </div>
 
